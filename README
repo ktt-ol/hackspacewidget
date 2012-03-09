@@ -1,0 +1,2 @@
+This piece of software implements the Hackerspace Status API defined at https://hackerspaces.nl/spaceapi/
+and uses the API to present a widget on the Android desktop.
