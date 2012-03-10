@@ -15,8 +15,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -31,18 +33,32 @@ import com.google.gson.Gson;
 public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String VERSION = "0.1";
 	//private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php";
-	private final static String DIRECTORY = "http://lhw.ring0.de/cgi-bin/spacedirectory.rb";
+	private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php?fmt=a";
 
 	private ListPreference lp;
 	private SwitchPreference sp;
 	private EditTextPreference ep;
+	
+	int widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-
+		
+		setResult(RESULT_CANCELED);
+		
+		Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+        	widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+        
+        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+        }
+        
 		lp = (ListPreference) findPreference("predefined_hackspace");
 		ep = (EditTextPreference) findPreference("custom_url");
 		sp = (SwitchPreference) findPreference("custom_hackspace");
@@ -51,6 +67,18 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 
 		ep.setEnabled(sp.isChecked());
 
+		lp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference arg0, Object arg1) {
+				new HackspaceWidgetConfig.UpdateWidget().execute();
+				
+	            Intent resultValue = new Intent();
+	            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+	            setResult(RESULT_OK, resultValue);
+	            finish();
+				return true;
+			}
+		});
+		
 		sp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				ep.setEnabled((Boolean) newValue);
@@ -72,11 +100,25 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 						}).create().show();
 					return false;
 				}
+				
+				new HackspaceWidgetConfig.UpdateWidget().execute();
+				
+	            Intent resultValue = new Intent();
+	            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+	            setResult(RESULT_OK, resultValue);
+	            finish();
 				return true;
 			}
 		});
 	}
-	
+	public class UpdateWidget extends AsyncTask<Void, Void, Void>{
+		protected Void doInBackground(Void... arg0) {
+			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getBaseContext());
+	        HackspaceStatusProvider.updateAppWidget(getBaseContext(), appWidgetManager, widgetId);
+			return null;
+		}
+	}
+
 	private class LoadLatestDirectory extends AsyncTask<String, Void, String[][]> {
 		protected String[][] doInBackground(String... arg0) {
 			HttpEntity body;
