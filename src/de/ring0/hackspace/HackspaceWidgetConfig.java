@@ -30,9 +30,10 @@ import android.preference.SwitchPreference;
 
 import com.google.gson.Gson;
 
+import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
+
 public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String VERSION = "0.1";
-	//private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php";
 	private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php?fmt=a";
 
 	private ListPreference lp;
@@ -69,7 +70,8 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 
 		lp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference arg0, Object arg1) {
-				new HackspaceWidgetConfig.UpdateWidget().execute();
+				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getBaseContext());
+		        new UpdateWidgetTask().execute(new TaskParameters(getBaseContext(), appWidgetManager, widgetId)); 
 				
 	            Intent resultValue = new Intent();
 	            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
@@ -101,7 +103,8 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 					return false;
 				}
 				
-				new HackspaceWidgetConfig.UpdateWidget().execute();
+				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getBaseContext());
+		        new UpdateWidgetTask().execute(new TaskParameters(getBaseContext(), appWidgetManager, widgetId));
 				
 	            Intent resultValue = new Intent();
 	            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
@@ -110,13 +113,6 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 				return true;
 			}
 		});
-	}
-	public class UpdateWidget extends AsyncTask<Void, Void, Void>{
-		protected Void doInBackground(Void... arg0) {
-			AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getBaseContext());
-	        HackspaceStatusProvider.updateAppWidget(getBaseContext(), appWidgetManager, widgetId);
-			return null;
-		}
 	}
 
 	private class LoadLatestDirectory extends AsyncTask<String, Void, String[][]> {

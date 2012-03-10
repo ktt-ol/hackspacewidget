@@ -4,50 +4,36 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
 
-public class HackerSpaceStatusAPI implements ResponseHandler<Boolean>, Runnable {
+public class HackerSpaceStatusAPI {
 //	private final static String TAG = HackerSpaceStatusAPI.class.getSimpleName();
 	private final static String VERSION = "0.1";
 	
-	private APICallback apiCallback;
 	private HttpClient client;
 	private HttpGet get;
 	
-	public HackerSpaceStatusAPI(String url, APICallback callback) {
-		apiCallback = callback;
+	public HackerSpaceStatusAPI(String url) {
 		client = new DefaultHttpClient();
 		get = new HttpGet(url);
 		get.setHeader("Accept", "application/json");
 		get.setHeader("User-Agent", String.format("Android Widget/%s", VERSION));
 	}
 	
-	@Override
-	public void run() {
-		try {
-			client.execute(get, this);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
-	
-	@Override
-	public Boolean handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+	public SpaceStatus run() throws ClientProtocolException, IOException {
 		HttpEntity body;
 		String line, content = "";
+		
+		HttpResponse response = client.execute(get);
 
 		if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && (body = response.getEntity()) != null) {
 			BufferedReader bir = new BufferedReader(new InputStreamReader(body.getContent()));
@@ -59,15 +45,10 @@ public class HackerSpaceStatusAPI implements ResponseHandler<Boolean>, Runnable 
  			Gson g = new Gson();
 			SpaceStatus ss = g.fromJson(content, SpaceStatus.class);
 			if(!ss.space.equals("")) {
-				apiCallback.processNewStatus(ss);
-				return true;
+				return ss;
 			}
 		}
-		return false;
-	}
-	
-	public interface APICallback {
-		public void processNewStatus(SpaceStatus fresh);
+		return null;	
 	}
 
 	public static class SpaceStatus {
@@ -86,11 +67,45 @@ public class HackerSpaceStatusAPI implements ResponseHandler<Boolean>, Runnable 
 		public String status;
 		public long lastchange;
 		public SpaceEvent[] events;
-		public Map<String, Map<String,String>>[] sensors;
+		public SpaceSensors sensors;
 		public SpaceFeed[] feeds;
 		
 		public SpaceStatus() {}
 	}
+	
+	/* Sensors */
+	public static class SpaceSensors {
+		public TemperatureSensor[] temperature;
+		public HumiditySensor[] humidity;
+		public Barometer[] barometer;
+		public WindSensor[] wind;
+		public WifiConnection[] wifi;
+	}
+	public static class TemperatureSensor {
+		public String name;
+		public Float value;
+		public String unit;
+	}
+	public static class HumiditySensor {
+		public String name;
+		public Float value;
+	}
+	public static class Barometer {
+		public String name;
+		public Float value;
+		public String unit;
+	}
+	public static class WindSensor {
+		public String name;
+		public Float speed;
+		public Float gust;
+		public String unit;
+	}
+	public static class WifiConnection {
+		public String name;
+		public Integer connections;
+	}
+	
 	public static class SpaceIcons {
 		public String open;
 		public String closed;
