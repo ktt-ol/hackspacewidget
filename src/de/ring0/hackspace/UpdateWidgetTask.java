@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.RemoteViews;
 import de.ring0.hackspace.HackerSpaceStatusAPI.SpaceStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
@@ -28,26 +29,29 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 			url = sp.getString("predefined_hackspace", "http://localhost");
 		
 		try {
-			return new HackerSpaceStatusAPI(url).run();
+			HackerSpaceStatusAPI hss = new HackerSpaceStatusAPI(url);
+			SpaceStatus ss = hss.run();
+			return ss;
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			Log.e("UpdateWidgetTask", e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e("UpdateWidgetTask", e.getMessage());
 		}
 		return null;
 	}
 	@Override
 	protected void onPostExecute (SpaceStatus result) {
-		RemoteViews views = new RemoteViews(tp.context.getPackageName(), R.layout.widget_layout);
-		int resId;
-		if(result.open)
-			resId = android.R.drawable.btn_star_big_on;
-		else
-			resId = android.R.drawable.btn_star_big_off;
-		
-		views.setImageViewResource(R.id.imageView1, resId);
-		tp.appWidgetManager.updateAppWidget(tp.appWidgetId, views);
-
+		if(result != null) {
+			RemoteViews views = new RemoteViews(tp.context.getPackageName(), R.layout.widget_layout);
+			int resId;
+			if(result.open)
+				resId = android.R.drawable.btn_star_big_on;
+			else
+				resId = android.R.drawable.btn_star_big_off;
+			
+			views.setImageViewResource(R.id.imageView1, resId);
+			tp.appWidgetManager.updateAppWidget(tp.appWidgetId, views);
+		}
 	}
 	public static class TaskParameters {
 		public Context context;

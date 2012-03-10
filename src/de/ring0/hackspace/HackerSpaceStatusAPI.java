@@ -32,6 +32,7 @@ public class HackerSpaceStatusAPI {
 	public SpaceStatus run() throws ClientProtocolException, IOException {
 		HttpEntity body;
 		String line, content = "";
+		SpaceStatus ss = null;
 		
 		HttpResponse response = client.execute(get);
 
@@ -43,12 +44,12 @@ public class HackerSpaceStatusAPI {
 			bir.close();
 
  			Gson g = new Gson();
-			SpaceStatus ss = g.fromJson(content, SpaceStatus.class);
-			if(!ss.space.equals("")) {
+			ss = g.fromJson(content, SpaceStatus.class);
+			if(!ss.api.equals("0.12")) {
 				return ss;
 			}
 		}
-		return null;	
+		return ss;	
 	}
 
 	public static class SpaceStatus {
