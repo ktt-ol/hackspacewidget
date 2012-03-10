@@ -3,5 +3,5 @@
 
     <string name="app_name">Hackspace Status</string>
     <string name="preferences_view">Preferences</string>
-	<string name="spacestatusdirectory">http://chasmcity.sonologic.nl/spacestatusdirectory.php</string>
+
 </resources>

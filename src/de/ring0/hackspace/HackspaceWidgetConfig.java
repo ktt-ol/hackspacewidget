@@ -30,6 +30,8 @@ import com.google.gson.Gson;
 
 public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String VERSION = "0.1";
+	//private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php";
+	private final static String DIRECTORY = "http://lhw.ring0.de/cgi-bin/spacedirectory.rb";
 
 	private ListPreference lp;
 	private SwitchPreference sp;
@@ -45,7 +47,7 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 		ep = (EditTextPreference) findPreference("custom_url");
 		sp = (SwitchPreference) findPreference("custom_hackspace");
 
-		new LoadLatestDirectory().execute(getResources().getString(R.string.spacestatusdirectory));
+		new LoadLatestDirectory().execute(DIRECTORY);
 
 		ep.setEnabled(sp.isChecked());
 
