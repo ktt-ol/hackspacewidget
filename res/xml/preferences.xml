@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:icon="@android:drawable/ic_menu_preferences">
+
+    <PreferenceCategory
+        android:summary="Location of the HackSpace API"
+        android:title="Hackspace Selection" >
+        <ListPreference
+            android:key="predefined_hackspace"
+            android:summary="Choose one of the predefined Hackspaces"
+            android:title="Choose Hackspace" 
+            android:enabled="false"/>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="custom_hackspace"
+            android:summary="Use info from an unlisted Hackspace"
+            android:title="Unlisted Hackspace" />
+
+        <EditTextPreference
+            android:defaultValue="http://"
+            android:enabled="false"
+            android:key="custom_url"
+            android:summary="Specify the Hackspace API URL"
+            android:title="Hackspace API" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

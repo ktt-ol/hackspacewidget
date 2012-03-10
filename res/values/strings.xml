@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, HackspaceWidgetConfig!</string>
-    <string name="app_name">HackspaceWidget</string>
-
+    <string name="app_name">Hackspace Status</string>
+    <string name="preferences_view">Preferences</string>
+	<string name="spacestatusdirectory">http://chasmcity.sonologic.nl/spacestatusdirectory.php</string>
 </resources>
