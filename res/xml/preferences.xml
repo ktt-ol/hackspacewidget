@@ -7,11 +7,11 @@
         android:title="Hackspace Selection" >
         <ListPreference
             android:key="predefined_hackspace"
-            android:summary="Choose one of the predefined Hackspaces"
+            android:summary="Loading the Online SpaceDirectory..."
             android:title="Choose Hackspace" 
             android:enabled="false"/>
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="custom_hackspace"
             android:summary="Use info from an unlisted Hackspace"

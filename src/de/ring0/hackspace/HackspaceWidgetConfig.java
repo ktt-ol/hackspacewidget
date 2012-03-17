@@ -21,12 +21,12 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
-import android.preference.SwitchPreference;
 
 import com.google.gson.Gson;
 
@@ -37,7 +37,7 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php?fmt=a";
 
 	private ListPreference lp;
-	private SwitchPreference sp;
+	private CheckBoxPreference cp;
 	private EditTextPreference ep;
 	
 	int widgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
@@ -62,11 +62,11 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
         
 		lp = (ListPreference) findPreference("predefined_hackspace");
 		ep = (EditTextPreference) findPreference("custom_url");
-		sp = (SwitchPreference) findPreference("custom_hackspace");
+		cp = (CheckBoxPreference) findPreference("custom_hackspace");
 
 		new LoadLatestDirectory().execute(DIRECTORY);
 
-		ep.setEnabled(sp.isChecked());
+		ep.setEnabled(cp.isChecked());
 
 		lp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference arg0, Object arg1) {
@@ -81,7 +81,7 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 			}
 		});
 		
-		sp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		cp.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				ep.setEnabled((Boolean) newValue);
 				return true;
@@ -154,6 +154,7 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 		
 		protected void onPostExecute(String[][] result) {
 			if(result != null) {
+				lp.setSummary("Choose one of the predefined Hackspaces");
 				lp.setEntries(result[0]);
 				lp.setEntryValues(result[1]);
 				lp.setEnabled(true);
