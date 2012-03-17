@@ -15,14 +15,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
 
-public class HackerSpaceStatusAPI {
+public class HackspaceStatusAPI {
 //	private final static String TAG = HackerSpaceStatusAPI.class.getSimpleName();
 	private final static String VERSION = "0.1";
 	
 	private HttpClient client;
 	private HttpGet get;
 	
-	public HackerSpaceStatusAPI(String url) {
+	public HackspaceStatusAPI(String url) {
 		client = new DefaultHttpClient();
 		get = new HttpGet(url);
 		get.setHeader("Accept", "application/json");

@@ -11,7 +11,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
-import de.ring0.hackspace.HackerSpaceStatusAPI.SpaceStatus;
+import de.ring0.hackspace.HackspaceStatusAPI.SpaceStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
 
 public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatus> {
@@ -29,7 +29,7 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 			url = sp.getString("predefined_hackspace", "http://localhost");
 		
 		try {
-			HackerSpaceStatusAPI hss = new HackerSpaceStatusAPI(url);
+			HackspaceStatusAPI hss = new HackspaceStatusAPI(url);
 			SpaceStatus ss = hss.run();
 			return ss;
 		} catch (ClientProtocolException e) {
