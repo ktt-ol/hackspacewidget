@@ -2,6 +2,35 @@
 <resources>
 
     <string name="app_name">Hackspace Status</string>
+    
     <string name="preferences_view">Preferences</string>
+    <string name="selection_category_summary">Location of the HackSpace API</string>
+    <string name="selection_category_title">Hackspace Selection</string>
+    <string name="predefined_hackspace_summary">Loading the Online SpaceDirectory...</string>
+    <string name="predefined_hackspace_summary_done">Loading the Online SpaceDirectory...</string>
+    <string name="predefined_hackspace_title">Choose Hackspace</string>
+    <string name="custom_hackspace_summary">Use info from an unlisted Hackspace</string>
+    <string name="custom_hackspace_title">Unlisted Hackspace</string>
+    <string name="custom_url_summary">Specify the Hackspace API URL</string>
+    <string name="custom_url_title">Hackspace API</string>
+    <string name="widget_configuration_summary">Configure the basic widget settings</string>
+    <string name="widget_configuration_title">Widget Configuration</string>
+    <string name="update_frequency_summary">How often should the update happen</string>
+    <string name="update_frequency_title">Update Frequency</string>
+    
 
+    <string-array name="updateArray">
+        <item>Every 5 mins</item>
+        <item>Every 15 mins</item>
+        <item>Every 20 mins</item>
+        <item>Every 30 mins</item>
+        <item>Every 60 mins</item>
+    </string-array>
+    <string-array name="updateValues">
+        <item>300000</item>
+        <item>900000</item>
+        <item>1200000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+    </string-array>
 </resources>

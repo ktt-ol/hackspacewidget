@@ -170,7 +170,7 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 		
 		protected void onPostExecute(String[][] result) {
 			if(result != null) {
-				lp.setSummary("Choose one of the predefined Hackspaces");
+				lp.setSummary(R.string.predefined_hackspace_summary_done);
 				lp.setEntries(result[0]);
 				lp.setEntryValues(result[1]);
 				lp.setEnabled(true);
