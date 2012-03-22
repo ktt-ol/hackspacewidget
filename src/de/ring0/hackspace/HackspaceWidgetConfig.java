@@ -19,6 +19,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -27,14 +28,20 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import de.ring0.hackspace.UpdateWidgetTask.RefreshStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
 
 public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String VERSION = "0.1";
 	private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php?fmt=a";
+	
+	protected SharedPreferences sp;
+	protected RefreshStatus rs = null;
+	protected Gson g;
 
 	private ListPreference lp;
 	private CheckBoxPreference cp;
@@ -50,11 +57,16 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 		
 		setResult(RESULT_CANCELED);
 		
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
         	widgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        	g = new Gson();
+        	rs = g.fromJson(sp.getString("refreshStatus", ""), RefreshStatus.class);
         }
+
         
         if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
@@ -76,6 +88,8 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 	            Intent resultValue = new Intent();
 	            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 	            setResult(RESULT_OK, resultValue);
+	            rs.refreshWidget.put(widgetId, true);
+	            sp.edit().putString("refreshStatus", g.toJson(rs)).commit();
 	            finish();
 				return true;
 			}
@@ -109,6 +123,8 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 	            Intent resultValue = new Intent();
 	            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
 	            setResult(RESULT_OK, resultValue);
+	            rs.refreshWidget.put(widgetId, true);
+	            sp.edit().putString("refreshStatus", g.toJson(rs)).commit();
 	            finish();
 				return true;
 			}

@@ -18,6 +18,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".HackspaceInfoActivity"
+            android:label="Info View">
+        </activity>
 
         <receiver android:name="HackspaceStatusProvider" >
             <intent-filter>

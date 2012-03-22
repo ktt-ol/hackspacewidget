@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +19,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.google.gson.Gson;
+
 import de.ring0.hackspace.HackspaceStatusAPI.SpaceStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
 
@@ -29,6 +35,24 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 		tp = tps[0];
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(tp.context);
 		String url;
+		
+		Gson g = new Gson();
+    	RefreshStatus rs = null;
+    	
+    	/* stop the widget from rendering before the configuration is completed */
+    	if(sp.contains("refreshStatus")) {
+    		rs = g.fromJson(sp.getString("refreshStatus", ""), RefreshStatus.class);
+        	if(!rs.refreshWidget.containsKey(tp.appWidgetId)) {
+        		rs.refreshWidget.put(tp.appWidgetId, false);
+                sp.edit().putString("refreshStatus", g.toJson(rs)).commit();
+        		return null;
+        	}
+       	}
+    	else {
+    		rs = new RefreshStatus();
+            sp.edit().putString("refreshStatus", g.toJson(rs)).commit();
+            return null;
+    	}        
 		
 		if(sp.getBoolean("custom_hackspace", false))
 			url = sp.getString("custom_url", "http://localhost");
@@ -66,6 +90,10 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 			else
 				views.setImageViewBitmap(R.id.imageView1, closedIcon);
 
+        	Intent intent = new Intent(tp.context, HackspaceInfoActivity.class);
+        	PendingIntent pendingIntent = PendingIntent.getActivity(tp.context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+        	views.setOnClickPendingIntent(R.layout.widget_layout, pendingIntent);
+        	
 			tp.appWidgetManager.updateAppWidget(tp.appWidgetId, views);
 		}
 	}
@@ -79,5 +107,8 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 			this.appWidgetId = appWidgetId;
 		}
 	}
-
+	
+	public static class RefreshStatus {
+		public HashMap<Integer,Boolean> refreshWidget = new HashMap<Integer,Boolean>();
+	}
 }
