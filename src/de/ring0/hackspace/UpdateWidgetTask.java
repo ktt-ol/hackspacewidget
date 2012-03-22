@@ -84,6 +84,8 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 	protected void onPostExecute (SpaceStatus result) {
 		if(result != null) {
 			RemoteViews views = new RemoteViews(tp.context.getPackageName(), R.layout.widget_layout);
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(tp.context);
+			Gson g = new Gson();
 
 			if(result.open)
 				views.setImageViewBitmap(R.id.imageView1, openIcon);
@@ -91,10 +93,13 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 				views.setImageViewBitmap(R.id.imageView1, closedIcon);
 
         	Intent intent = new Intent(tp.context, HackspaceInfoActivity.class);
-        	PendingIntent pendingIntent = PendingIntent.getActivity(tp.context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-        	views.setOnClickPendingIntent(R.layout.widget_layout, pendingIntent);
+        	PendingIntent pendingIntent = PendingIntent.getActivity(tp.context, 0, intent, 0);
+        	views.setOnClickPendingIntent(R.id.imageView1, pendingIntent);
+        	
         	
 			tp.appWidgetManager.updateAppWidget(tp.appWidgetId, views);
+			
+			sp.edit().putString("status", g.toJson(result)).commit();
 		}
 	}
 	public static class TaskParameters {

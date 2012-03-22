@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name=".HackspaceInfoActivity"
-            android:label="Info View">
+            android:label="@string/info_view">
         </activity>
 
         <receiver android:name="HackspaceStatusProvider" >

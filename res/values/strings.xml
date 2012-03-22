@@ -4,10 +4,12 @@
     <string name="app_name">Hackspace Status</string>
     
     <string name="preferences_view">Preferences</string>
+    <string name="info_view">Hackspace Info</string>
+    
     <string name="selection_category_summary">Location of the HackSpace API</string>
     <string name="selection_category_title">Hackspace Selection</string>
     <string name="predefined_hackspace_summary">Loading the Online SpaceDirectory...</string>
-    <string name="predefined_hackspace_summary_done">Loading the Online SpaceDirectory...</string>
+    <string name="predefined_hackspace_summary_done">Choose a predefined Hackspace</string>
     <string name="predefined_hackspace_title">Choose Hackspace</string>
     <string name="custom_hackspace_summary">Use info from an unlisted Hackspace</string>
     <string name="custom_hackspace_title">Unlisted Hackspace</string>
