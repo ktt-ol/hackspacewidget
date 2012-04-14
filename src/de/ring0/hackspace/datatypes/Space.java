@@ -3,6 +3,7 @@ package de.ring0.hackspace.datatypes;
 import java.util.HashMap;
 
 public class Space {
+	public int id;
 	public String api;
 	public String statusapi;
 	public String name;
