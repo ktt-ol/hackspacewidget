@@ -34,6 +34,7 @@ import com.google.gson.Gson;
 
 import de.ring0.hackspace.UpdateWidgetTask.RefreshStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
+import de.ring0.hackspace.datatypes.SpaceDirectory;
 
 public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String VERSION = "0.1";
@@ -177,12 +178,5 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 			}
 		}
 		
-	}
-	private class SpaceDirectory {
-		public Space[] spaces;
-	}
-	private class Space {
-		public String name;
-		public String url;
 	}
 }

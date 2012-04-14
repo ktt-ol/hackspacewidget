@@ -19,11 +19,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HackspaceInfoActivity"
+            android:name=".HackspaceViewActivity"
             android:label="@string/info_view">
         </activity>
 
-        <receiver android:name="HackspaceStatusProvider" >
+        <receiver android:name=".HackspaceStatusProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

@@ -22,16 +22,16 @@ import android.widget.RemoteViews;
 
 import com.google.gson.Gson;
 
-import de.ring0.hackspace.HackspaceStatusAPI.SpaceStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
+import de.ring0.hackspace.datatypes.Space;
 
-public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatus> {
+public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, Space> {
 	private static final String TAG = UpdateWidgetTask.class.getSimpleName();
 	private Bitmap openIcon, closedIcon;
 	private TaskParameters tp;
 
 	@Override
-	protected SpaceStatus doInBackground(TaskParameters... tps) {
+	protected Space doInBackground(TaskParameters... tps) {
 		tp = tps[0];
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(tp.context);
 		String url;
@@ -61,7 +61,7 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 		
 		try {
 			HackspaceStatusAPI hss = new HackspaceStatusAPI(url);
-			SpaceStatus ss = hss.run();
+			Space ss = hss.run();
 			
 			URL open = new URL(ss.icon.open);
 			URL closed = new URL(ss.icon.closed);
@@ -81,25 +81,27 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, SpaceStatu
 		return null;
 	}
 	@Override
-	protected void onPostExecute (SpaceStatus result) {
+	protected void onPostExecute (Space result) {
 		if(result != null) {
 			RemoteViews views = new RemoteViews(tp.context.getPackageName(), R.layout.widget_layout);
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(tp.context);
 			Gson g = new Gson();
+			
+			String serialized = g.toJson(result);
 
 			if(result.open)
 				views.setImageViewBitmap(R.id.imageView1, openIcon);
 			else
 				views.setImageViewBitmap(R.id.imageView1, closedIcon);
 
-        	Intent intent = new Intent(tp.context, HackspaceInfoActivity.class);
+        	Intent intent = new Intent(tp.context, HackspaceViewActivity.class);
         	PendingIntent pendingIntent = PendingIntent.getActivity(tp.context, 0, intent, 0);
         	views.setOnClickPendingIntent(R.id.imageView1, pendingIntent);
         	
         	
 			tp.appWidgetManager.updateAppWidget(tp.appWidgetId, views);
 			
-			sp.edit().putString("status", g.toJson(result)).commit();
+			sp.edit().putString("status", serialized).commit();
 		}
 	}
 	public static class TaskParameters {
