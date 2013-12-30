@@ -1,5 +1,7 @@
 package de.ring0.hackspace;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,13 +14,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.google.gson.Gson;
 
 import de.ring0.hackspace.datatypes.Space;
 
 public class HackspaceStatusAPI {
 //	private final static String TAG = HackerSpaceStatusAPI.class.getSimpleName();
 	private final static String VERSION = "0.1";
+    private final static String CURRENT_API_VERSION = "0.13";
 	
 	private HttpClient client;
 	private HttpGet get;
@@ -46,7 +48,7 @@ public class HackspaceStatusAPI {
 
  			Gson g = new Gson();
 			ss = g.fromJson(content, Space.class);
-			if(!ss.api.equals("0.12")) {
+			if(!ss.api.equals(CURRENT_API_VERSION)) {
 				return ss;
 			}
 		}

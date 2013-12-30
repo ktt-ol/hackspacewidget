@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
-public class HackspaceListFragment extends SherlockListFragment implements OnItemClickListener {
+public class HackspaceListFragment extends ListFragment implements OnItemClickListener {
 
 	List<String> spaceList = new ArrayList<String>();
 	private SpaceSelectedListener listener = null;

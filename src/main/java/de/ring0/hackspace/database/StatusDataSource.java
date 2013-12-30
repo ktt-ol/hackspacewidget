@@ -17,7 +17,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import de.ring0.hackspace.datatypes.Space;
-import de.ring0.hackspace.datatypes.SpaceIcons;
+import de.ring0.hackspace.datatypes.field.SpaceIcon;
 
 public class StatusDataSource {
 
@@ -55,8 +55,8 @@ public class StatusDataSource {
 			db.replace(TABLE_NAME, null, cv);
 		} else {
 			try {
-				URL open = new URL(space.icon.open);
-				URL closed = new URL(space.icon.closed);
+				URL open = new URL(space.state.icon.open);
+				URL closed = new URL(space.state.icon.closed);
 				URLConnection urlOpen = open.openConnection();
 				URLConnection urlClosed = closed.openConnection();
 				
@@ -89,14 +89,9 @@ public class StatusDataSource {
 		
 		return s;
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public SpaceIcons getIcons(int id) {
-		SpaceIcons si = new SpaceIcons();
+
+	public SpaceIcon getIcons(int id) {
+		SpaceIcon si = new SpaceIcon();
 		
 		Cursor c = db.query(TABLE_NAME, new String[] {"open", "closed"}, "space = "+id, null, null, null, null);
 		if(c.getCount() > 0) {

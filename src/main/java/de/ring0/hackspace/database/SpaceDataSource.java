@@ -35,8 +35,8 @@ public class SpaceDataSource {
 	 */
 	public void insertSpace(Space space) {
 		ContentValues cv = new ContentValues();
-		cv.put("name", space.name);
-		cv.put("url", space.statusapi);
+		cv.put("name", space.space);
+		cv.put("url", space.spaceapi);
 		
 		db.insert(TABLE_NAME, null, cv);
 	}
@@ -49,8 +49,8 @@ public class SpaceDataSource {
 		db.beginTransaction();
 		for(Space s : spaces) {
 			ContentValues cv = new ContentValues();
-			cv.put("name", s.name);
-			cv.put("url", s.statusapi);
+			cv.put("name", s.space);
+			cv.put("url", s.spaceapi);
 			db.insert(TABLE_NAME, null, cv);
 		}
 		db.endTransaction();
@@ -67,8 +67,8 @@ public class SpaceDataSource {
 		Cursor c = db.query(TABLE_NAME, COLUMNS, String.format("id = %d", id), null, null, null, null);
 		c.moveToFirst();
 		s.id = c.getInt(0);
-		s.name = c.getString(1);
-		s.statusapi = c.getString(2);
+		s.space = c.getString(1);
+		s.spaceapi = c.getString(2);
 		c.close();
 		
 		return s;
@@ -103,8 +103,8 @@ public class SpaceDataSource {
 		while(!c.isAfterLast()) {
 			Space s = new Space();
 			s.id = c.getInt(0);
-			s.name = c.getString(1);
-			s.statusapi = c.getString(2);
+			s.space = c.getString(1);
+			s.spaceapi = c.getString(2);
 			spaces.add(s);
 			c.moveToNext();
 		}

@@ -63,8 +63,8 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, Space> {
 			HackspaceStatusAPI hss = new HackspaceStatusAPI(url);
 			Space ss = hss.run();
 			
-			URL open = new URL(ss.icon.open);
-			URL closed = new URL(ss.icon.closed);
+			URL open = new URL(ss.state.icon.open);
+			URL closed = new URL(ss.state.icon.closed);
 			URLConnection urlOpen = open.openConnection();
 			URLConnection urlClosed = closed.openConnection();
 			urlOpen.setUseCaches(true);
@@ -89,7 +89,7 @@ public class UpdateWidgetTask extends AsyncTask<TaskParameters, Void, Space> {
 			
 			String serialized = g.toJson(result);
 
-			if(result.open)
+			if(result.state.open)
 				views.setImageViewBitmap(R.id.imageView1, openIcon);
 			else
 				views.setImageViewBitmap(R.id.imageView1, closedIcon);

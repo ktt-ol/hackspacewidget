@@ -1,28 +1,37 @@
 package de.ring0.hackspace.datatypes;
 
-import java.util.HashMap;
+import java.util.Map;
+
+import de.ring0.hackspace.datatypes.field.SpaceContact;
+import de.ring0.hackspace.datatypes.field.SpaceEvent;
+import de.ring0.hackspace.datatypes.field.SpaceFeeds;
+import de.ring0.hackspace.datatypes.field.SpaceFED;
+import de.ring0.hackspace.datatypes.field.SpaceCache;
+import de.ring0.hackspace.datatypes.field.SpaceRadioShow;
+import de.ring0.hackspace.datatypes.field.SpaceLocation;
+import de.ring0.hackspace.datatypes.field.SpaceSensors;
+import de.ring0.hackspace.datatypes.field.SpaceState;
 
 public class Space {
 	public int id;
 	public String api;
-	public String statusapi;
-	public String name;
 	public String space;
 	public String logo;
-	public SpaceIcons icon;
 	public String url;
-	public String address;
-	public SpaceContact contact;
-	public float lat;
-	public float lon;
+    public String spaceapi;
+	public SpaceLocation location;
+    public SpaceFED spacefed;
 	public String[] cam;
-	public HashMap<String,String> stream;
-	public boolean open;
-	public String status;
-	public long lastchange;
+	public Map<String,String> stream;
+	public SpaceState state;
 	public SpaceEvent[] events;
-	public SpaceSensors sensors;
-	public SpaceFeed[] feeds;
+    public SpaceContact contact;
+    public SpaceSensors sensors;
+	public SpaceFeeds feeds;
+    public SpaceCache cache;
+    public String[] projects;
+    public SpaceRadioShow radio_shows;
+
 	
 	public Space() {}
 }

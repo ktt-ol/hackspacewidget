@@ -1,7 +1,7 @@
 package de.ring0.hackspace;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import android.support.v4.app.ListFragment;
 
-public class HackspaceInfoFragment extends SherlockListFragment {
+public class HackspaceInfoFragment extends ListFragment {
 
 }

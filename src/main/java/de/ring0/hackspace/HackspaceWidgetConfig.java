@@ -3,8 +3,12 @@ package de.ring0.hackspace;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,16 +35,17 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import de.ring0.hackspace.UpdateWidgetTask.RefreshStatus;
 import de.ring0.hackspace.UpdateWidgetTask.TaskParameters;
-import de.ring0.hackspace.datatypes.SpaceDirectory;
 
 public class HackspaceWidgetConfig extends PreferenceActivity {
 	private final static String VERSION = "0.1";
-	private final static String DIRECTORY = "http://chasmcity.sonologic.nl/spacestatusdirectory.php?fmt=a";
-	
-	protected SharedPreferences sp;
+	private final static String DIRECTORY = "http://spaceapi.net/directory.json";
+    private final static Type jsonHashMap = new TypeToken<Map<String, String>>(){}.getType();
+
+    protected SharedPreferences sp;
 	protected RefreshStatus rs = null;
 	protected Gson g;
 
@@ -77,7 +82,7 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 		ep = (EditTextPreference) findPreference("custom_url");
 		cp = (CheckBoxPreference) findPreference("custom_hackspace");
 
-		new LoadLatestDirectory().execute(DIRECTORY);
+        new LoadLatestDirectory().execute(DIRECTORY);
 
 		ep.setEnabled(cp.isChecked());
 
@@ -132,8 +137,8 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 		});
 	}
 
-	private class LoadLatestDirectory extends AsyncTask<String, Void, String[][]> {
-		protected String[][] doInBackground(String... arg0) {
+	private class LoadLatestDirectory extends AsyncTask<String, Void, Map<String,String>> {
+		protected Map<String,String> doInBackground(String... arg0) {
 			HttpEntity body;
 			String line, content = "";
 			HttpClient http = new DefaultHttpClient();
@@ -150,14 +155,9 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 						content += line;
 					}
 					bir.close();
-					
+
 					Gson g = new Gson();
-					SpaceDirectory sd = g.fromJson(content, SpaceDirectory.class);
-					String[][] keyValues = new String[2][sd.spaces.length];
-					for(int i = 0; i < sd.spaces.length; i++) {
-						keyValues[0][i] = sd.spaces[i].name;
-						keyValues[1][i] = sd.spaces[i].url;
-					}
+                    Map<String,String> keyValues = g.fromJson(content, jsonHashMap);
 					return keyValues;
 						
 				}
@@ -165,15 +165,15 @@ public class HackspaceWidgetConfig extends PreferenceActivity {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+            }
 			return null;
 		}
 		
-		protected void onPostExecute(String[][] result) {
+		protected void onPostExecute(Map<String, String> result) {
 			if(result != null) {
 				lp.setSummary(R.string.predefined_hackspace_summary_done);
-				lp.setEntries(result[0]);
-				lp.setEntryValues(result[1]);
+				lp.setEntries(result.keySet().toArray(new CharSequence[result.keySet().size()]));
+				lp.setEntryValues(result.values().toArray(new CharSequence[result.keySet().size()]));
 				lp.setEnabled(true);
 			}
 		}
